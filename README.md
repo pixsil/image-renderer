@@ -25,6 +25,12 @@ CACHE_IMAGES="true"
 SECURE_IMAGES="true"
 ```
 
+Add to routes
+```
+// image renderer
+Route::get('/render/{width}/{height}/{param}/{hash}/{filename}', 'ImageRenderController@image')->where('filename', '(.*)');
+```
+
 ## Usage
 
 // geting the url for rendering the image
