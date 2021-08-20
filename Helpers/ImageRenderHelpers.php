@@ -1,8 +1,8 @@
 <?php
 
 /*
- * version 5
- * 
+ * version 6
+ *
  * parameters:
  * default = crop / keep-aspect-ratio / no-upscale
  *
@@ -13,10 +13,19 @@
 if (!function_exists('img_url')) {
     function img_url($original_image_path, $max_height, $max_width, $param = 0)
     {
+        // init
+        $url = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D';
+
         // new factory
-        $image_factory = new App\Classes\ImageFactory($original_image_path, $max_height, $max_width, $param);
+        $image_factory = App\Classes\ImageFactory::create($original_image_path, $max_width, $max_height, $param)
+            ->generateOptimizedImagePath();
 
         // return url
-        return $image_factory->getImageUrl();
+        if ($image_url = $image_factory->setStorageDisc('public_html')->setCacheDisc('public_html')->getImageUrl()) {
+            $url = $image_url;
+        }
+
+        return $url;
     }
 }
+
