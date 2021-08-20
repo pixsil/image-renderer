@@ -34,6 +34,8 @@ Add to env
 ```
 REGENERATE_IMAGES="false"
 SECURE_IMAGES="true"
+#IMAGE_STORAGE_DISK="ftp"
+#IMAGE_CACHE_DISK="public"
 ```
 
 Add to routes
