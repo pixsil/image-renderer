@@ -1,6 +1,6 @@
 <?php
 
-// version 2
+// version 3
 
 namespace App\Http\Controllers;
 
@@ -36,23 +36,23 @@ class ImageRenderController extends Controller
         }
         // file dont exist
         if (!File::exists(public_path($public_path))) {
-            return abort(403, 'could not find image');
+            return abort(404);
         }
 
         // get the pathinfo
         $pathinfo = pathinfo($public_path);
 
         // set uniquefier
-        $identifier = $max_height .'_'. $max_width  .'_'. $param;
+        $identifier = $max_width .'_'. $max_height  .'_'. $param;
 
         // generate new image name
         $image_name = md5($pathinfo['dirname'] .'_'. $pathinfo['filename'] .'_'. $identifier) .'.'. $pathinfo['extension'];
 
         // set new url to give back
-        $new_url = '/'. $pathinfo['dirname'] .'/cache/'. $image_name;
+        $new_url = '/storage/img_cache/'. $image_name;
 
         // get path
-        $storage_filepath = public_path($new_url);
+        $storage_filepath = storage_path('app/public/img_cache/'. $image_name);
 
         // guard if file not exist
         if (env('CACHE_IMAGES', true) === false || !File::exists($storage_filepath)) {
@@ -69,7 +69,6 @@ class ImageRenderController extends Controller
 
         // debuging
         } else {
-
             // dont redirect and serve file for making debuging easy
             $respone = response()->file($storage_filepath);
         }
