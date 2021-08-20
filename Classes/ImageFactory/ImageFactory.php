@@ -1,6 +1,6 @@
 <?php
 
-// version 6.beta
+// version 7.beta
 
 Namespace App\Classes;
 
