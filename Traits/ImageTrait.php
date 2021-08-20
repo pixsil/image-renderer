@@ -1,20 +1,20 @@
 <?php
 
-// version 1
+// version 2.1
 
 namespace App\Traits;
 
-//use App\Classes\ImageFactory;
-//use Illuminate\Support\Facades\File;
-//use Intervention\Image\Facades\Image;
-//use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
+use App\Classes\ImageFactory;
+use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
+use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
 
 trait ImageTrait
 {
     /**
      * get storage file path
      * $identifier = for default: $height _ $with for curstom: hash
-     * example: /home/vagrant/code/pixsil_site/storage/app/private/projects/1/background_image/spinub_bg_500_250.jpg
+     * example: /home/vagrant/code/site/storage/app/private/projects/1/background_image/image_bg_500_250.jpg
      */
     public function getStorageImageFilePath_2($field, $identifier, $public = false)
     {
@@ -58,7 +58,7 @@ trait ImageTrait
      * u = change no-upscale to upscale
      * r = change optimize to no-optimize
      */
-    protected function createImage_2($field, $max_height, $max_width, $image_storage_path, $param = null, $callback = null, $public = false)
+    protected function createImage_2($field, $max_width, $max_height, $image_storage_path, $param = null, $callback = null, $public = false)
     {
         // get storage path
         $filepath = $this->getStorageFilePath($field, $public);
@@ -94,7 +94,7 @@ trait ImageTrait
                 $max_width_nullable = $max_width == 0 ? null : $max_width;
 
                 // default do the resize
-                $image->resize($max_height_nullable, $max_width_nullable, function ($constraint) use ($param) {
+                $image->resize($max_width_nullable, $max_height_nullable, function ($constraint) use ($param) {
 
                     // if stratch allowed
                     if (strpos($param,'s') === false) {
@@ -135,9 +135,9 @@ trait ImageTrait
     /**
      * deprecated
      */
-    public function getImage($field, $height, $width, $callback = null, $public = false)
+    public function getImage($field, $width, $height, $callback = null, $public = false)
     {
-        return $this->getOrCreateImageObject($field, $height, $width, $callback = null, $public = false);
+        return $this->getOrCreateImageObject($field, $width, $height, $callback = null, $public = false);
     }
 
     /**
@@ -145,7 +145,7 @@ trait ImageTrait
      * this functions save the image first (also aplying compression) not smart to make a object from it again
      * so why the save?
      */
-    public function _getImageObject_2($field, $height, $width, $param = null, $callback = null, $public = false)
+    public function _getImageObject_2($field, $width, $height, $param = null, $callback = null, $public = false)
     {
         // guard if file excist
         if (!$this->fileExists($field, $public)) {
@@ -164,7 +164,7 @@ trait ImageTrait
         if (!File::exists($image_storage_path)) {
 
             // create image and give back object
-            $image = $this->createImage_2($field, $height, $width, $image_storage_path, $param, $callback, $public);
+            $image = $this->createImage_2($field, $width, $height, $image_storage_path, $param, $callback, $public);
 
         // already excist just serve
         } else {
