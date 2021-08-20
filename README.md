@@ -19,6 +19,8 @@ composer require intervention/image
 composer require spatie/image-optimizer
 ```
 
+This package also depends on pixsil/storage-trait
+
 ## Installation
 
 For a quick install, run this from your project root:
