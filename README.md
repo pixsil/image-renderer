@@ -16,7 +16,7 @@ This tool is using the packages intervention/image and spatie/image-optimizer
 
 ```
 composer require intervention/image
-composer require spatie/image-optimizer
+composer require spatie/laravel-image-optimizer
 ```
 
 This package also depends on pixsil/storage-trait
@@ -32,14 +32,14 @@ wget -O app/Http/Controllers/ImageRenderController.php https://raw.githubusercon
 
 Add to env
 ```
-CACHE_IMAGES="true"
+REGENERATE_IMAGES="false"
 SECURE_IMAGES="true"
 ```
 
 Add to routes
 ```
 // image renderer
-Route::get('/render/{width}/{height}/{param}/{hash}/{filename}', 'ImageRenderController@image')->where('filename', '(.*)');
+Route::get('/render/{width}/{height}/{param}/{filename}/r', 'ImageRenderController@image')->where('filename', '(.*)')->name('image-render');
 ```
 
 ## Usage
