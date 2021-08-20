@@ -10,6 +10,15 @@ Find this project useful? You can support me on Patreon
 
 https://www.patreon.com/pixsil
 
+## Requirements
+
+This tool is using the packages intervention/image and spatie/image-optimizer
+
+```
+composer require intervention/image
+composer require spatie/image-optimizer
+```
+
 ## Installation
 
 For a quick install, run this from your project root:
