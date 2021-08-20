@@ -1,6 +1,6 @@
 <?php
 
-// version 3
+// version 4 - cache images not in seperate folder
 
 namespace App\Http\Controllers;
 
@@ -49,10 +49,10 @@ class ImageRenderController extends Controller
         $image_name = md5($pathinfo['dirname'] .'_'. $pathinfo['filename'] .'_'. $identifier) .'.'. $pathinfo['extension'];
 
         // set new url to give back
-        $new_url = '/storage/img_cache/'. $image_name;
+        $new_url = '/'. $pathinfo['dirname'] .'/cache/'. $image_name;
 
         // get path
-        $storage_filepath = storage_path('app/public/img_cache/'. $image_name);
+        $storage_filepath = public_path($new_url);
 
         // guard if file not exist
         if (env('CACHE_IMAGES', true) === false || !File::exists($storage_filepath)) {
