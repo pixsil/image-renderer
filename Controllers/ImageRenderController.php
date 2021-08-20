@@ -1,78 +1,69 @@
 <?php
-
-// version 4 - cache images not in seperate folder
+// version 2>7.beta
 
 namespace App\Http\Controllers;
 
 use App\Classes\ImageFactory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
-use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Request as RequestFacade;
 
 class ImageRenderController extends Controller
 {
+    public function __construct(Request $request)
+    {
+//        if (!$request->hasValidSignature()) {
+//            abort(401);
+//        }
+    }
+
     /*
+     * width and height are max values, it resize to the smallest edge
+     * if you the best possible image with both height and with use "fit"
+     *
      * parameters:
      * default = crop / keep-aspect-ratio / no-upscale / optimized
      *
-     * f = change crop to fit
+     * f = change crop to fit (use fit if you want to make sure the width and height are the given value)
      * s = change keep-aspect-ratio to strach
      * u = change no-upscale to upscale
      * r = change optimized to not-optimized
      */
-    public function image($max_width, $max_height, $param = 0, $hash, $public_path)
+    public function image($max_width, $max_height, $param = 0, $public_path)
     {
-        // guard gen hash
-        if (!$public_path = substr($public_path, 0, -2)) {
-            return abort(404);
-        }
-        // guard gen hash
-        if (!$our_hash = substr(md5($public_path . $max_width . $max_height . $param), 0, 8)) {
-            return abort(404);
-        }
-        // check hash if securtiy is on
-        if (env('SECURE_IMAGES', true) === true && $our_hash !== $hash) {
-            return abort(404);
-        }
-        // file dont exist
-        if (!File::exists(public_path($public_path))) {
-            return abort(404);
-        }
+        //
+        $timestamp = RequestFacade::get('timestamp', null);
+        $crop_x = RequestFacade::get('crop_x', null);
+        $crop_y = RequestFacade::get('crop_y', null);
+        $crop_width = RequestFacade::get('crop_width', null);
+        $crop_height = RequestFacade::get('crop_height', null);
+        $storage = RequestFacade::get('storage', null);
+        $cache = RequestFacade::get('cache', null);
 
-        // get the pathinfo
-        $pathinfo = pathinfo($public_path);
+        // get image url
+        $image_factory = ImageFactory::create($public_path, $max_width, $max_height, $param)
+            ->setCrop($crop_x, $crop_y, $crop_width, $crop_height)
+            ->setTimestamp($timestamp);
 
-        // set uniquefier
-        $identifier = $max_width .'_'. $max_height  .'_'. $param;
-
-        // generate new image name
-        $image_name = md5($pathinfo['dirname'] .'_'. $pathinfo['filename'] .'_'. $identifier) .'.'. $pathinfo['extension'];
-
-        // set new url to give back
-        $new_url = '/'. $pathinfo['dirname'] .'/cache/'. $image_name;
-
-        // get path
-        $storage_filepath = public_path($new_url);
-
-        // guard if file not exist
-        if (env('CACHE_IMAGES', true) === false || !File::exists($storage_filepath)) {
-
-            // create image
-            ImageFactory::createImage($public_path, $max_width, $max_height, $param);
+        // if we use a other storage thing
+        if ($storage) {
+            $image_factory->setStorageDisc($storage);
         }
 
-        // make respone
-        if (env('CACHE_IMAGES', true) === true) {
-
-            // set default redirect to new url
-            $respone = redirect($new_url);
-
-        // debuging
-        } else {
-            // dont redirect and serve file for making debuging easy
-            $respone = response()->file($storage_filepath);
+        // if we use a other storage thing
+        if ($cache) {
+            $image_factory->setCacheDisc($cache);
         }
 
-        return $respone;
+        // go on
+        $image_factory->generateOptimizedImagePath();
+
+        // create if not exists or need to remake
+        $image_factory->createImage();
+
+        //
+        $url_to_file = $image_factory->getCachedUrl();
+
+        return redirect($url_to_file);
     }
 }
