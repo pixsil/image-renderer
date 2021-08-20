@@ -19,6 +19,12 @@ wget -O app/Classes/Images/ImageFactory.php https://raw.githubusercontent.com/pi
 wget -O app/Http/Controllers/ImageRenderController.php https://raw.githubusercontent.com/pixsil/xxxx??
 ```
 
+Add to env
+```
+CACHE_IMAGES="true"
+SECURE_IMAGES="true"
+```
+
 ## Usage
 
 // geting the url for rendering the image
