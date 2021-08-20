@@ -1,6 +1,6 @@
 <?php
 
-// version 5
+// version 6
 
 Namespace App\Classes;
 
@@ -15,11 +15,11 @@ class ImageFactory
 {
     /*
      * get image url
-     * 
+     *
      * this one get always loaded by image request, this must be fast
      * public path because you never want to cache protected images
      */
-    static public function getImageUrl($public_path, $max_height, $max_width, $param = 0)
+    static public function getImageUrl($public_path, $max_width, $max_height, $param = 0)
     {
         // guard trim
         if (!$public_path = trim($public_path, '/')) {
@@ -45,7 +45,7 @@ class ImageFactory
         $pathinfo = pathinfo($public_path);
 
         // set uniquefier
-        $identifier = $max_height .'_'. $max_width  .'_'. $param;
+        $identifier = $max_width .'_'. $max_height .'_'. $param;
 
         // generate new image name
         $image_name = md5($pathinfo['dirname'] .'_'. $pathinfo['filename'] .'_'. $identifier) .'.'. $pathinfo['extension'];
@@ -59,7 +59,7 @@ class ImageFactory
         // guard if file not excist
         if (env('CACHE_IMAGES', true) === false || !File::exists($storage_filepath)) {
 
-            // 
+            //
             $new_url = self::getHashUrl($public_path, $max_width, $max_height, $param);
         }
 
@@ -75,7 +75,7 @@ class ImageFactory
         $pathinfo = pathinfo($public_path);
 
         // set uniquefier
-        $identifier = $max_height .'_'. $max_width  .'_'. $param;
+        $identifier = $max_width .'_'. $max_height  .'_'. $param;
 
         // generate new image name
         $image_name = md5($pathinfo['dirname'] .'_'. $pathinfo['filename'] .'_'. $identifier) .'.'. $pathinfo['extension'];
@@ -100,14 +100,13 @@ class ImageFactory
 
             // if fit
             if (strpos($param,'f') !== false) {
-        
+
                 // fit image
                 $image->fit($max_width, $max_height, function ($constraint) use ($param) {
 
 
                     // if upscale allowed
                     if (strpos($param,'u') === false) {
-
 
                         // prevent from upscaling
                         $constraint->upsize();
@@ -122,11 +121,10 @@ class ImageFactory
                 $max_width_nullable = $max_width == 0 ? null : $max_width;
 
                 // default do the resize
-                $image->resize($max_height_nullable, $max_width_nullable, function ($constraint) use ($param) {
+                $image->resize($max_width_nullable, $max_height_nullable, function ($constraint) use ($param) {
 
                     // if stratch allowed
                     if (strpos($param,'s') === false) {
-
 
                         // keep aspect, otherwise it get strached
                         $constraint->aspectRatio();
@@ -140,6 +138,7 @@ class ImageFactory
                     }
                 });
             }
+
 
         // use custom function
         } else {
@@ -164,12 +163,11 @@ class ImageFactory
         return;
     }
 
-
     /*
      * get image hash image
      */
     static public function getHashUrl($public_path, $max_width, $max_height, $param = 0)
-    {    
+    {
         // make hash
         $hash = md5($public_path . $max_width . $max_height . $param);
 
