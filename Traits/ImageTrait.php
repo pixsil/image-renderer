@@ -1,6 +1,6 @@
 <?php
 
-// version 2.1
+// version 3.beta
 
 namespace App\Traits;
 
@@ -14,7 +14,7 @@ trait ImageTrait
     /**
      * get storage file path
      * $identifier = for default: $height _ $with for curstom: hash
-     * example: /home/vagrant/code/site/storage/app/private/projects/1/background_image/image_bg_500_250.jpg
+     * example: /home/vagrant/code/site/storage/app/private/projects/1/background_image/bg_500_250.jpg
      */
     public function getStorageImageFilePath_2($field, $identifier, $public = false)
     {
@@ -26,6 +26,18 @@ trait ImageTrait
         if (!$value = $this->$field) {
             return null;
         }
+        // guard public path
+        if (!$pathinfo = pathinfo($value)) {
+            return null;
+        }
+        // guard filename
+        if (!isset($pathinfo['filename'])) {
+            return null;
+        }
+        // guard extension
+        if (!isset($pathinfo['extension'])) {
+            return null;
+        }
 
         // is it public or private folder
         $folder = 'private';
@@ -34,9 +46,6 @@ trait ImageTrait
             // set public
             $folder = 'public';
         }
-
-        // get the pathinfo
-        $pathinfo = pathinfo($value);
 
         // generate new image name
         $image_storage_name = $pathinfo['filename'] .'_'. $identifier .'.'. $pathinfo['extension'];
@@ -184,41 +193,84 @@ trait ImageTrait
     {
         // gaurd must save first to receive id
         if (!$id = $this->id) {
-            return null;
+            return 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D';
         }
         // guard if field excist
-        if (!$value = $this->$field) {
-            return false;
+        if (!$value_arr = $this->getImageValueArr($field)) {
+            return 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D';
         }
-        // guard if file excist
-        // if (!$this->fileExists($field, true)) {
-            // return '';
-        // }
-        // guard identiefier
-        // if (!$identifier = !$callback ? $height .'_'. $width .'_'. $param : substr(md5(json_encode($callback)),0,8)) {
-            // return '';
-        // }
-        // guard if name from database fields cannot be created
-        // if (!$image_storage_path = $this->getStorageImageFilePath_2($field, $identifier, true)) {
-            // return '';
-        // }
+        // guard if field excist
+        if (!$value_arr['name']) {
+            return 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D';
+        }
 
-        // guard if file not excist
-        // if (env('CACHE_IMAGES', true) === false || !File::exists($image_storage_path)) {
+        // init
+        $url = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D';
 
-            // void create image
+        // if we have a timestamp
+        $timestamp = $this->updated_at->timestamp ?? null;
 
         //
-        $public_path = 'storage/'. $this->getTable() .'/'. $id .'/'. $field .'/'. $value;
+        $public_path = $this->getTable() .'/'. $id .'/'. $field .'/'. $value_arr['name'];
 
         // get image url
-        $url = ImageFactory::getImageUrl($public_path, $max_width, $max_height, $param);
-            // $this->createImage_2($field, $height, $width, $image_storage_path, $param, $callback, true);
-        // }
+        $image_factory = ImageFactory::create($public_path, $max_width, $max_height, $param)
+            ->setCrop($value_arr['crop_x'], $value_arr['crop_y'], $value_arr['crop_width'], $value_arr['crop_height'])
+            ->setTimestamp($timestamp)
+            ->generateOptimizedImagePath();
 
-        // get public image path
-        // $url = $this->getPublicImageFilePath_2($field, $identifier);
+        // get url
+        if ($url_image = $image_factory->getImageUrl()) {
+            $url = $url_image;
+        }
 
         return $url;
+    }
+
+    /**
+     * does the file exists
+     *
+     * @return bool
+     */
+    public function getImageValueArr($field)
+    {
+        // init name
+        if (!$name = $this->$field) {
+            return false;
+        }
+
+        // init crop
+        $crop_x = null;
+        $crop_y = null;
+        $crop_width = null;
+        $crop_height = null;
+
+        // if we have a object get the filename
+        if ($object = json_decode($name)) {
+
+            // file must be the right var in the object
+            $name = $object->file ?? '';
+
+            //
+            if (property_exists($object, 'x')) {
+
+                //
+                $crop_x = $object->x ?? null;
+                $crop_y = $object->y ?? null;
+                $crop_width = $object->width ?? null;
+                $crop_height = $object->height ?? null;
+            }
+        }
+
+        //
+        $value_arr = [
+            'name' => $name,
+            'crop_x' => $crop_x,
+            'crop_y' => $crop_y,
+            'crop_width' => $crop_width,
+            'crop_height' => $crop_height
+        ];
+
+        return $value_arr;
     }
 }
