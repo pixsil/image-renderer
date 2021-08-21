@@ -1,6 +1,6 @@
 <?php
 
-// version 3.beta
+// version 4.beta
 
 namespace App\Traits;
 
@@ -18,6 +18,7 @@ trait ImageTrait
      */
     public function getStorageImageFilePath_2($field, $identifier, $public = false)
     {
+        var_dump('edit to disk use');exit;
         // must save first to receive id
         if (!$id = $this->id) {
             return null;
@@ -69,6 +70,7 @@ trait ImageTrait
      */
     protected function createImage_2($field, $max_width, $max_height, $image_storage_path, $param = null, $callback = null, $public = false)
     {
+        var_dump('edit to disk use');exit;
         // get storage path
         $filepath = $this->getStorageFilePath($field, $public);
 
@@ -146,6 +148,7 @@ trait ImageTrait
      */
     public function getImage($field, $width, $height, $callback = null, $public = false)
     {
+        var_dump('edit to disk use');exit;
         return $this->getOrCreateImageObject($field, $width, $height, $callback = null, $public = false);
     }
 
@@ -156,6 +159,7 @@ trait ImageTrait
      */
     public function _getImageObject_2($field, $width, $height, $param = null, $callback = null, $public = false)
     {
+        var_dump('edit to disk use');exit;
         // guard if file excist
         if (!$this->fileExists($field, $public)) {
             return false;
