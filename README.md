@@ -28,6 +28,7 @@ For a quick install, run this from your project root:
 mkdir -p app/Classes
 wget -O app/Classes/Images/ImageFactory.php https://raw.githubusercontent.com/pixsil/xxxx??
 wget -O app/Http/Controllers/ImageRenderController.php https://raw.githubusercontent.com/pixsil/xxxx??
+wget -O app/Console/Commands/CleanStorageCacheCommand.php https://raw.githubusercontent.com/pixsil/xxxx??
 ```
 
 Add to env
