@@ -21,7 +21,7 @@ if (!function_exists('img_url')) {
             ->generateOptimizedImagePath();
 
         // return url
-        if ($image_url = $image_factory->setStorageDisc('public_html')->setCacheDisc('public_html')->getImageUrl()) {
+        if ($image_url = $image_factory->getImageUrl()) {
             $url = $image_url;
         }
 
