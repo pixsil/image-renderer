@@ -1,7 +1,7 @@
 <?php
 
 /*
- * version 6
+ * version 7
  *
  * parameters:
  * default = crop / keep-aspect-ratio / no-upscale
