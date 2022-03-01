@@ -42,7 +42,7 @@ SECURE_IMAGES="true"
 Add to routes
 ```
 // image renderer
-Route::get('/render/{width}/{height}/{param}/{filename}/r', 'ImageRenderController@image')->where('filename', '(.*)')->name('image-render');
+Route::get('/render/{width}/{height}/{param}/{filename}/r', [ImageRenderController::class, 'image'])->where('filename', '(.*)')->name('image-render');
 ```
 
 ## Usage
