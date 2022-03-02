@@ -1,6 +1,6 @@
 <?php
 
-// version 4.beta
+// version 5.beta
 
 namespace App\Traits;
 
@@ -217,7 +217,8 @@ trait ImageTrait
         //
         $public_path = $this->getTable() .'/'. $id .'/'. $field .'/'. $value_arr['name'];
 
-        // get image url
+        // get image url (without creating the image)
+        // todo should not called "create", it is creating an object not an image
         $image_factory = ImageFactory::create($public_path, $max_width, $max_height, $param)
             ->setCrop($value_arr['crop_x'], $value_arr['crop_y'], $value_arr['crop_width'], $value_arr['crop_height'])
             ->setTimestamp($timestamp)
