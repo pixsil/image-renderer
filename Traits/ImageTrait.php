@@ -1,6 +1,6 @@
 <?php
 
-// version 5.beta
+// version 4.1 beta
 
 namespace App\Traits;
 
