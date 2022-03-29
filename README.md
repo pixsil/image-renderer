@@ -33,7 +33,7 @@ mkdir -p app/Commands
 wget -O app/Commands/CleanStorageCacheCommand.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Commands/CleanStorageCacheCommand.php
 wget -O app/Controllers/Http/ImageRenderController.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Controllers/ImageRenderController.php
 mkdir -p app/Helpers
-wget -O app/Helpers/ImageRenderHelpers.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Helpers/ImageRenderHelpers.php
+wget -O app/Http/Helpers/ImageRenderHelpers.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Helpers/ImageRenderHelpers.php
 mkdir -p app/Traits
 wget -O app/Traits/ImageTrait.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Traits/ImageTrait.php
 ```
