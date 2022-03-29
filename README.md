@@ -19,7 +19,9 @@ composer require intervention/image
 composer require spatie/laravel-image-optimizer
 ```
 
-This package also depends on pixsil/storage-trait
+This package also depends on pixsil/storage-trait:
+
+https://github.com/pixsil/storage-trait
 
 ## Installation
 
