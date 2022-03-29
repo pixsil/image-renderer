@@ -17,7 +17,7 @@ if (!function_exists('img_url')) {
         $url = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D';
 
         // new factory
-        $image_factory = App\Classes\ImageFactory::create($original_image_path, $max_width, $max_height, $param)
+        $image_factory = App\Classes\ImageFactory\ImageFactory::create($original_image_path, $max_width, $max_height, $param)
             ->generateOptimizedImagePath();
 
         // return url
