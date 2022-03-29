@@ -1,8 +1,12 @@
 # Image renderer for Laravel
 
-## What is it?
+## What is it and how does it work
 
 *Work in Progress*
+
+This library makes optimalized images for your Laravel application. The library renders an link for the image href for each image and it is not doing any image logic with the main request what makes this library super fast. Inside the url some parameters are given, for crobs, sizes and some effects.
+
+When the browser start loading the images the url, the request url checks if the image got an cached. If this is the case the cached image will be returned. If the cached image is not yet created the library creates this image and applies the settings (crob etc) that are given in the link.
 
 ## Donate
 
