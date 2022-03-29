@@ -1,10 +1,10 @@
 <?php
 
-// version 4.1 beta
+// version 5 beta
 
 namespace App\Traits;
 
-use App\Classes\ImageFactory;
+use App\Classes\ImageFactory\ImageFactory;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\Facades\Image;
 use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
