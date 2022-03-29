@@ -79,3 +79,7 @@ $object->getImageUrl_2()
 ## Additional knowledge
 
 ## Example
+
+## Not working?
+
+- This library is using the url set in your fileservers config. Make sure this url is correct and the symlink is in place.
