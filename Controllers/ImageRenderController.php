@@ -1,9 +1,9 @@
 <?php
-// version 2>7.beta
+// version 9
 
 namespace App\Http\Controllers;
 
-use App\Classes\ImageFactory;
+use App\Classes\ImageFactory\ImageFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Request as RequestFacade;
