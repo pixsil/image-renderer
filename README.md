@@ -27,10 +27,15 @@ https://github.com/pixsil/storage-trait
 
 For a quick install, run this from your project root:
 ```bash
-mkdir -p app/Classes
-wget -O app/Classes/Images/ImageFactory.php https://raw.githubusercontent.com/pixsil/xxxx??
-wget -O app/Http/Controllers/ImageRenderController.php https://raw.githubusercontent.com/pixsil/xxxx??
-wget -O app/Console/Commands/CleanStorageCacheCommand.php https://raw.githubusercontent.com/pixsil/xxxx??
+mkdir -p app/Classes/ImageFactory
+wget -O app/Classes/ImageFactory/ImageFactory.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Classes/ImageFactory/ImageFactory.php
+mkdir -p app/Commands
+wget -O app/Commands/CleanStorageCacheCommand.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Commands/CleanStorageCacheCommand.php
+wget -O app/Controllers/Http/ImageRenderController.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Controllers/ImageRenderController.php
+mkdir -p app/Helpers
+wget -O app/Helpers/ImageRenderHelpers.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Helpers/ImageRenderHelpers.php
+mkdir -p app/Traits
+wget -O app/Traits/ImageTrait.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Traits/ImageTrait.php
 ```
 
 Add to env
