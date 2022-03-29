@@ -52,6 +52,11 @@ Add to routes
 Route::get('/render/{width}/{height}/{param}/{filename}/r', [ImageRenderController::class, 'image'])->where('filename', '(.*)')->name('image-render');
 ```
 
+Add to your general helper file
+```
+include('Helpers/ImageRenderHelpers.php');
+```
+
 ## Usage
 
 // geting the url for rendering the image
