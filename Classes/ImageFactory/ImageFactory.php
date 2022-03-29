@@ -1,8 +1,8 @@
 <?php
 
-// version 7.beta
+// version 8
 
-Namespace App\Classes;
+Namespace App\Classes\ImageFactory;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
