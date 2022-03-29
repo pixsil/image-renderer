@@ -8,6 +8,8 @@ This library makes optimalized images for your Laravel application. The library 
 
 When the browser start loading the images the url, the request url checks if the image got an cached. If this is the case the cached image will be returned. If the cached image is not yet created the library creates this image and applies the settings (crob etc) that are given in the link.
 
+This library is made to make use of filesystems. For example you can use it to use in comibation with a Amazon S3 bucket.
+
 ## Donate
 
 Find this project useful? You can support me on Patreon
@@ -87,3 +89,4 @@ $object->getImageUrl_2()
 ## Not working?
 
 - This library is using the url set in your fileservers config. Make sure this url is correct and the symlink is in place.
+- This library using the APP_URL to generate the image link (if using local storage). Make sure you got the url correct. When testing without an SSL certificate. Make sure the APP_URL does not have https but http.
