@@ -90,3 +90,4 @@ $object->getImageUrl_2()
 
 - This library is using the url set in your fileservers config. Make sure this url is correct and the symlink is in place.
 - This library using the APP_URL to generate the image link (if using local storage). Make sure you got the url correct. When testing without an SSL certificate. Make sure the APP_URL does not have https but http.
+- Also check if you have to right env variables
