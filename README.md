@@ -45,11 +45,14 @@ wget -O app/Traits/ImageTrait.php https://raw.githubusercontent.com/pixsil/image
 ```
 
 Add to env
+
+Images are rendered with an direct url, so an storage disk must provide a way to load the images with an direct url. Public always works. For AWS or FTP an url must be set inside the filesystems.php.
+
 ```
 REGENERATE_IMAGES="false"
 SECURE_IMAGES="true"
-#IMAGE_STORAGE_DISK="ftp"
-#IMAGE_CACHE_DISK="public"
+#IMAGE_STORAGE_DISK="public" // default option
+#IMAGE_CACHE_DISK="public" 
 ```
 
 Add to routes
