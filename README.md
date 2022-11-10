@@ -37,7 +37,7 @@ mkdir -p app/Classes/ImageFactory
 wget -O app/Classes/ImageFactory/ImageFactory.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Classes/ImageFactory/ImageFactory.php
 mkdir -p app/Commands
 wget -O app/Commands/CleanStorageCacheCommand.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Commands/CleanStorageCacheCommand.php
-wget -O app/Controllers/Http/ImageRenderController.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Controllers/ImageRenderController.php
+wget -O app/Http/Controllers/ImageRenderController.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Controllers/ImageRenderController.php
 mkdir -p app/Helpers
 wget -O app/Http/Helpers/ImageRenderHelpers.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Helpers/ImageRenderHelpers.php
 mkdir -p app/Traits
