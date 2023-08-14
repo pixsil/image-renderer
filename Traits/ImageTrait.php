@@ -1,11 +1,15 @@
 <?php
 
-// version 5 beta
+// version 6
 
 namespace App\Traits;
 
 use App\Classes\ImageFactory\ImageFactory;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Request as RequestFacade;
+use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Spatie\LaravelImageOptimizer\Facades\ImageOptimizer;
 
@@ -97,7 +101,7 @@ trait ImageTrait
                     }
                 });
 
-            // if normal
+                // if normal
             } else {
 
                 // nullable
@@ -123,7 +127,7 @@ trait ImageTrait
                 });
             }
 
-        // use custom function
+            // use custom function
         } else {
 
             // do callback
@@ -179,7 +183,7 @@ trait ImageTrait
             // create image and give back object
             $image = $this->createImage_2($field, $width, $height, $image_storage_path, $param, $callback, $public);
 
-        // already excist just serve
+            // already excist just serve
         } else {
 
             // get image
@@ -193,23 +197,32 @@ trait ImageTrait
      * get back the image object to serve
      * for public images
      */
-    public function getImageUrl_2($field, $max_width, $max_height, $param = 0, $callback = null)
+    public function getImageUrl_2($field, $max_width, $max_height, $param = '', $callback = null)
     {
-        // gaurd must save first to receive id
+        // guard must save first to receive id
         if (!$id = $this->id) {
             return 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D';
         }
+
+        // guard we have a file do we recreate it
+        if (env('REGENERATE_IMAGES', false) === true) {
+            Cache::clear();
+        }
+
+        $cache_key = self::getCacheKey($this->getTable(), $id, $max_width, $max_height, $param);
+
+        if ($url = Cache::get($cache_key)) {
+
+            return $url;
+        }
+
         // guard if field excist
         if (!$value_arr = $this->getImageValueArr($field)) {
             return 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D';
         }
-        // guard if field excist
         if (!$value_arr['name']) {
             return 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D';
         }
-
-        // init
-        $url = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D';
 
         // if we have a timestamp
         $timestamp = $this->updated_at->timestamp ?? null;
@@ -222,15 +235,49 @@ trait ImageTrait
         $image_factory = ImageFactory::create($public_path, $max_width, $max_height, $param)
             ->setCrop($value_arr['crop_x'], $value_arr['crop_y'], $value_arr['crop_width'], $value_arr['crop_height'])
             ->setTimestamp($timestamp)
-            ->generateOptimizedImagePath();
+            ->generateCachedImagePath();
+
+        // create if not exists or need to remake
+        $image_factory->createImage();
+
+        // you cannot delete them because you dont know if they are somewhere used
+        // $this->cleanupImageCache($field);
 
         // get url
-        if ($url_image = $image_factory->getImageUrl()) {
-            $url = $url_image;
-        }
+        $url = $image_factory->getCachedUrl();
+
+        Cache::forever($cache_key, $url);
 
         return $url;
     }
+
+    // public function cleanupImageCache($field)
+    // {
+    //     $storage = Storage::disk(env("IMAGE_CACHE_DISK", 'public'));
+    //
+    //     $table = $this->getTable();
+    //     $id = $this->id;
+    //
+    //     $path = "/{$table}/{$id}/{$field}/cache";
+    //
+    //     $files = $storage->files($path);
+    //
+    //     foreach ($files as $file) {
+    //
+    //         $cache_key = getCacheKey($table, $id, $max_width, $max_height, $params)
+    //     }
+    //
+    //     vd($files);
+    //
+    //     $cache_group_key = "pixsil.image-cache.{$table}.{$id}";
+    //
+    //     Cache::set('pixsila.fuiehsssfio',11);
+    //
+    //     vd(Cache::get('pixsila'));
+    //     // foreach () {
+    //     //
+    //     // }
+    // }
 
     /**
      * does the file exists
@@ -277,5 +324,11 @@ trait ImageTrait
         ];
 
         return $value_arr;
+    }
+
+
+    public static function getCacheKey(string $table, string $id, $max_width, $max_height, $params): string
+    {
+        return "pixsil.image-cache.{$table}.{$id}.{$max_width}_{$max_height}_{$params}";
     }
 }

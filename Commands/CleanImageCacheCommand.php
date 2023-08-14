@@ -1,20 +1,21 @@
-<?php 
-    
+<?php
+
 // version 1
-    
+
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
-class CleanStorageCacheCommmand extends Command
+class CleanImageCacheCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'command:clean-storage-cache {disk?}';
+    protected $signature = 'command:clean-image-cache {disk?}';
 
     /**
      * The console command description.
@@ -40,6 +41,8 @@ class CleanStorageCacheCommmand extends Command
      */
     public function handle()
     {
+        Cache::clear();
+
         // if disk is set
         $disk = $this->argument('disk') ?? config('filesystems.default');
 

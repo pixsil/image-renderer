@@ -2,19 +2,17 @@
 
 ## What is it and how does it work
 
-*Work in Progress*
-
-This library makes optimalized images for your Laravel application. The library renders an link for the image href for each image and it is not doing any image logic with the main request what makes this library super fast. Inside the url some parameters are given, for crobs, sizes and some effects.
-
-When the browser start loading the images the url, the request url checks if the image got an cached. If this is the case the cached image will be returned. If the cached image is not yet created the library creates this image and applies the settings (crob etc) that are given in the link.
-
-This library is made to make use of filesystems. For example you can use it to use in comibation with a Amazon S3 bucket.
+- This library makes optimized images for your Laravel application.
+- The images are minimized using the Spatie image compressor
+- The images are build and cached based on the needed format and crop
+- You can choose a filesystem to use for the storage of the original files or de cached files, also AWS S3 for example
+- Library uses the filesystem url to give the images back to the client
 
 ## Donate
 
-Find this project useful? You can support me on Patreon
+Find this project useful? You can support me with a Paypal donation:
 
-https://www.patreon.com/pixsil
+[Make Paypal Donation](https://www.paypal.com/donate/?hosted_button_id=2XCS6R3CTC5BA)
 
 ## Requirements
 
@@ -35,8 +33,8 @@ For a quick install, run this from your project root:
 ```bash
 mkdir -p app/Classes/ImageFactory
 wget -O app/Classes/ImageFactory/ImageFactory.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Classes/ImageFactory/ImageFactory.php
-mkdir -p app/Commands
-wget -O app/Commands/CleanStorageCacheCommand.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Commands/CleanStorageCacheCommand.php
+mkdir -p app/Console/Commands
+wget -O app/Console/Commands/CleanImageCacheCommand.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Commands/CleanImageCacheCommand.php
 wget -O app/Http/Controllers/ImageRenderController.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Controllers/ImageRenderController.php
 mkdir -p app/Helpers
 wget -O app/Http/Helpers/ImageRenderHelpers.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Helpers/ImageRenderHelpers.php
@@ -52,7 +50,7 @@ Images are rendered with an direct url, so an storage disk must provide a way to
 ```
 REGENERATE_IMAGES="false"
 SECURE_IMAGES="true"
-#IMAGE_STORAGE_DISK="public" // default option
+#IMAGE_STORAGE_DISK="db" // default option
 #IMAGE_CACHE_DISK="public" 
 ```
 

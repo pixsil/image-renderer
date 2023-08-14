@@ -1,6 +1,6 @@
 <?php
 
-// version 8
+// version 9
 
 Namespace App\Classes\ImageFactory;
 
@@ -57,7 +57,7 @@ class ImageFactory
         $this->max_height = $max_height;
         $this->param = $param;
 
-        $this->storage_disk = Storage::disk(env("IMAGE_STORAGE_DISK", 'public'));
+        $this->storage_disk = Storage::disk(env("IMAGE_STORAGE_DISK", 'db'));
         $this->cache_disk = Storage::disk(env("IMAGE_CACHE_DISK", 'public'));
 
         return $this;
@@ -70,7 +70,7 @@ class ImageFactory
      * this one get always loaded by image request, this must be fast
      * it does not matter if the optimized image is there or not
      */
-    public function getImageUrl()
+    public function _getImageUrl()
     {
         // guard filename
         if (!isset($this->pathinfo['filename'])) {
@@ -103,7 +103,7 @@ class ImageFactory
     /*
      * get image hash image
      */
-    public function getOpimizedImagePath()
+    public function getCachedImagePath()
     {
         // guard
         if (!$dirname = $this->pathinfo['dirname'] ?? null) {
@@ -118,8 +118,11 @@ class ImageFactory
             return null;
         }
 
-        //
+        // just make this identifier with variables from the render function
+        // if the user changes (like crop etc) are changed, this should trigger an full delete (its is like the source changed)
         $identifier_arr = [
+            env('APP_KEY'),
+            $filename,
             $this->max_width,
             $this->max_height,
             $this->param,
@@ -132,15 +135,20 @@ class ImageFactory
 
         // set identifier
         $identifier = implode('_', $identifier_arr);
-        $identifier = $dirname .'_'. $filename .'_'. $identifier;
 
         // generate new image name
-        $image_name = md5($identifier) .'.'. $extension;
+        $hash = substr(md5($identifier), 0, 6);
+
+        $cached_filename = $filename .'.'. $extension;
+
+        $param_url_part = $this->param ? '_'. $this->param : '';
+
+        $sub_cache_folder = "{$this->max_width}_{$this->max_height}{$param_url_part}_$hash";
 
         // set new url to give back
-        $optimized_path = $dirname .'/cache/'. $image_name;
+        $cached_path = $dirname .'/cache/'. $sub_cache_folder .'/'. $cached_filename;
 
-        return $optimized_path;
+        return $cached_path;
     }
 
     /*
@@ -162,7 +170,7 @@ class ImageFactory
     /*
      * get image hash image
      */
-    public function getRenderUrl()
+    public function _getRenderUrl()
     {
         //
         $default_parameters = [
@@ -241,10 +249,10 @@ class ImageFactory
     /*
      * Create image if not exists or need to remake
      */
-    public function generateOptimizedImagePath()
+    public function generateCachedImagePath()
     {
         // set
-        $this->optimized_path = $this->getOpimizedImagePath();
+        $this->optimized_path = $this->getCachedImagePath();
 
         return $this;
     }
@@ -258,10 +266,6 @@ class ImageFactory
         if (!$this->storage_disk->has($this->original_image_path)) {
             return abort(404, 'could not find image');
         }
-        // guard: check if we need to create a new image
-        if (!$this->needToCreate()) {
-            return;
-        }
         // guard
         if (!$dirname = $this->pathinfo['dirname']) {
             abort('403', 'Incorrect image directory');
@@ -272,7 +276,9 @@ class ImageFactory
         }
 
         // remove all the old cache
-        $this->cache_disk->deleteDirectory($dirname .'/cache');
+        // cannot delete cache because you can have cache of different sizes
+        // we have a cleanup function in treat, better place also
+        // $this->cache_disk->deleteDirectory($dirname .'/cache');
 
         //
         $file = $this->storage_disk->get($this->original_image_path);
@@ -305,7 +311,7 @@ class ImageFactory
                     }
                 });
 
-            // if normal
+                // if normal
             } else {
 
                 // nullable
@@ -332,7 +338,7 @@ class ImageFactory
                 });
             }
 
-        // use custom function
+            // use custom function
         } else {
 
             // use
@@ -355,7 +361,7 @@ class ImageFactory
             // laod tmp file back to image processor
             $this->cache_disk->put($optimized_path, file_get_contents($tmp_file));
 
-        // dont upload
+            // dont upload
         } else {
 
             // needed to save the file directly as steam (directly into the storage)
@@ -368,26 +374,26 @@ class ImageFactory
         return;
     }
 
-    /*
-     * check if we need to create an optimized image
-     */
-    public function needToCreate()
-    {
-        // guard optimized path
-        if (!$optimized_path = $this->optimized_path) {
-            abort(403, 'no optimized path is set4');
-        }
-        // guard no file alway create
-        if (!$this->cache_disk->has($optimized_path)) {
-            return true;
-        }
-        // guard we have a file do we recreate it
-        if (env('REGENERATE_IMAGES', false) === true) {
-            return true;
-        }
-
-        return false;
-    }
+    // /*
+    //  * check if we need to create an optimized image
+    //  */
+    // public function _needToCreate()
+    // {
+    //     // guard optimized path
+    //     if (!$optimized_path = $this->optimized_path) {
+    //         abort(403, 'no optimized path is set4');
+    //     }
+    //     // guard no file always create
+    //     if (!$this->cache_disk->has($optimized_path)) {
+    //         return true;
+    //     }
+    //     // guard we have a file do we recreate it
+    //     if (env('REGENERATE_IMAGES', false) === true) {
+    //         return true;
+    //     }
+    //
+    //     return false;
+    // }
 
     /*
      * check if we need to create an optimized image
