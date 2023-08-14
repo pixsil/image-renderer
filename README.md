@@ -68,6 +68,11 @@ include('Helpers/ImageRenderHelpers.php');
 
 ## Usage
 
+// Add the trait to the model you want to use
+```
+use ImageTrait;
+```
+
 // geting the url for rendering the image
 // it can give back two types of urls
 // an render image url (if image don’t exists)
