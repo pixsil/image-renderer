@@ -42,6 +42,7 @@ mkdir -p app/Helpers
 wget -O app/Http/Helpers/ImageRenderHelpers.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Helpers/ImageRenderHelpers.php
 mkdir -p app/Traits
 wget -O app/Traits/ImageTrait.php https://raw.githubusercontent.com/pixsil/image-renderer/main/Traits/ImageTrait.php
+mkdir -p storage/app/db
 ```
 
 Add to env
