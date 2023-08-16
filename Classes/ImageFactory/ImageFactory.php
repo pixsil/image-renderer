@@ -1,6 +1,6 @@
 <?php
 
-// version 9
+// version 10
 
 Namespace App\Classes\ImageFactory;
 
@@ -264,15 +264,15 @@ class ImageFactory
     {
         // guard original file dont exist
         if (!$this->storage_disk->has($this->original_image_path)) {
-            return abort(404, 'could not find image');
+            return false;
         }
         // guard
         if (!$dirname = $this->pathinfo['dirname']) {
-            abort('403', 'Incorrect image directory');
+            return false;
         }
         // guard optimized path
         if (!$optimized_path = $this->optimized_path) {
-            abort(403, 'no optimized path is set3');
+            return false;
         }
 
         // remove all the old cache
@@ -289,7 +289,7 @@ class ImageFactory
         // get image
         $image = Image::make($file);
 
-        // we we have to crop do it
+        // we have to crop do it
         if ($this->needToCrop()) {
             $image->crop($this->crop_width, $this->crop_height, $this->crop_x, $this->crop_y);
         }
@@ -371,7 +371,7 @@ class ImageFactory
             $this->cache_disk->put($optimized_path, $image);
         }
 
-        return;
+        return true;
     }
 
     // /*

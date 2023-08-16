@@ -1,6 +1,6 @@
 <?php
 
-// version 6
+// version 7
 
 namespace App\Traits;
 
@@ -238,7 +238,9 @@ trait ImageTrait
             ->generateCachedImagePath();
 
         // create if not exists or need to remake
-        $image_factory->createImage();
+        if (!$image_factory->createImage()) {
+            return 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D';
+        }
 
         // you cannot delete them because you dont know if they are somewhere used
         // $this->cleanupImageCache($field);
