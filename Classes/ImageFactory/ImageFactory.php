@@ -1,6 +1,6 @@
 <?php
 
-// version 10
+// version 11
 
 Namespace App\Classes\ImageFactory;
 
@@ -58,7 +58,7 @@ class ImageFactory
         $this->param = $param;
 
         $this->storage_disk = Storage::disk(env("IMAGE_STORAGE_DISK", 'db'));
-        $this->cache_disk = Storage::disk(env("IMAGE_CACHE_DISK", 'public'));
+        $this->cache_disk = Storage::disk(env("IMAGE_CACHE_DISK", 'cache'));
 
         return $this;
     }
@@ -422,7 +422,7 @@ class ImageFactory
     /*
      *
      */
-    public function setStorageDisc($storage_disc)
+    public function setStorageDisk($storage_disc)
     {
         $this->storage_disk = Storage::disk($storage_disc);
         $this->override_storage_disk = $storage_disc;
@@ -433,7 +433,7 @@ class ImageFactory
     /*
      *
      */
-    public function setCacheDisc($cache_disc)
+    public function setCacheDisk($cache_disc)
     {
         $this->cache_disk = Storage::disk($cache_disc);
         $this->override_cache_disk = $cache_disc;
