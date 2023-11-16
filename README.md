@@ -51,7 +51,25 @@ Images are rendered with an direct url, so an storage disk must provide a way to
 REGENERATE_IMAGES="false"
 SECURE_IMAGES="true"
 #IMAGE_STORAGE_DISK="db" // default option
-#IMAGE_CACHE_DISK="public" 
+#IMAGE_CACHE_DISK="cache" 
+```
+
+When using these disks, make sure you have them:
+
+```
+// dont need to have a public one, all files going served, all images are cached in different folder
+'db' => [
+    'driver' => 'local',
+    'root' => storage_path('app/db'),
+],
+
+'cache' => [
+    'driver' => 'local',
+    'root' => storage_path('app/cache'),
+    'url' => env('APP_URL').'/cache',
+    'visibility' => 'public',
+    'throw' => false,
+],
 ```
 
 Add to routes
