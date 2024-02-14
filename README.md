@@ -19,7 +19,7 @@ Find this project useful? You can support me with a Paypal donation:
 This tool is using the packages intervention/image and spatie/image-optimizer
 
 ```
-composer require intervention/image
+composer require intervention/image "^2"
 composer require spatie/laravel-image-optimizer
 ```
 
