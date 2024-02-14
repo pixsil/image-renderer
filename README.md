@@ -80,6 +80,12 @@ Add to your general helper file
 include('Helpers/ImageRenderHelpers.php');
 ```
 
+Create symlink for cache folder
+```
+ln -s ../storage/app/cache public/cache
+git add -f public/cache
+```
+
 ## Usage
 
 // Add the trait to the model you want to use
