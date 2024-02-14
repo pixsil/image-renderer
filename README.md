@@ -51,7 +51,7 @@ SECURE_IMAGES="true"
 #IMAGE_CACHE_DISK="cache" 
 ```
 
-When using these disks, make sure you have them:
+When using these disks, make sure you have them. You can also choose to remove the APP_URL part here, if you are caching local
 
 ```
 // dont need to have a public one, all files going served, all images are cached in different folder
