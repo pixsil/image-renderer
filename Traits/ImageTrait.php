@@ -1,5 +1,6 @@
 <?php
 
+// version 8 - fixed callback function
 // version 7
 
 namespace App\Traits;
@@ -238,7 +239,7 @@ trait ImageTrait
             ->generateCachedImagePath();
 
         // create if not exists or need to remake
-        if (!$image_factory->createImage()) {
+        if (!$image_factory->createImage($callback)) {
             return 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D';
         }
 
