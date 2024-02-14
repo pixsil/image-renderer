@@ -112,6 +112,14 @@ $object->getImageUrl_2()
 
 ## Additional knowledge
 
+If you want do do more changes in intervention image software use callback function
+
+```
+$image = $order_product->getImageUrl_2('pdf_image_front', 208, 104, '', function ($image_factory_object) {
+    # do some here
+});
+```
+
 ## Example
 
 ## Not working?
